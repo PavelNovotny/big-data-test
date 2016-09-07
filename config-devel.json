@@ -1,0 +1,4 @@
+{
+  "listen-address": "http://localhost",
+  "listen-port": 9200
+}
