@@ -1,0 +1,22 @@
+{
+  "name": "big-data-test",
+  "version": "1.0.0",
+  "description": "testing big data - big field, big array, big nested, for PoC Elasticsearch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavelNovotny/big-data-test.git"
+  },
+  "author": "Pavel Novotny",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PavelNovotny/big-data-test/issues"
+  },
+  "homepage": "https://github.com/PavelNovotny/big-data-test#readme",
+  "dependencies": {
+    "data-randomizer" : "git+ssh://lxsvnas401vm.ux.to2cz.cz:group_integrace/data-randomizer.git"
+  }
+}
