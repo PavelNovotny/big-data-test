@@ -47,7 +47,7 @@ function insertRandomBigData() {
 
 function insertBig(func) {
     var bigFunc = [];
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 5000; i++) {
         bigFunc.push(func);
     }
     async.series(bigFunc,

@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PavelNovotny/big-data-test.git"
+    "url": "git+ssh://lxsvnas401vm.ux.to2cz.cz:group_integrace/big-data-test.git"
   },
   "author": "Pavel Novotny",
   "license": "ISC",
