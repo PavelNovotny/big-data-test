@@ -14,21 +14,119 @@ nconf.argv()
     .file({ file: 'config-'+nconf.get('env')+'.json' });
 
 
-var textID = 0;
+var id1 = 0;
+var id2 = 0;
+var id3 = 0;
+var id4 = 0;
+var id5 = 0;
 var stringArrayID = 0;
 var objectID = 0;
 var objectArrayID = 0;
+var documentCount = 10;
 
-insertRandomBigData();
+//insertRandomBigData();
+insertOtecSyn40Po1000();
+insertOtecSyn40000Po1();
+insertOtecPole();
+
+function insertOtecSyn40Po1000() {
+    var func = function(callback) {
+        var otec_index = {"index":{"_index":"big-data-test","_type":"otec40po1000","_id":++id1}};
+        var otec = { "text" : randomizer.randomText({wordMinLen:5, wordMaxLen:15, wordCountMin: 1, wordCountMax : 1 }) };
+        var postText = JSON.stringify(otec_index)+"\n"
+            +JSON.stringify(otec)+"\n";
+        for (var i=0; i<40; i++) {
+            var syn_index = {"index":{"_index":"big-data-test","_type":"syn40po1000","_id":++id2,"_parent":id1}};
+            var syn = { "login" : randomizer.randomStringArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 1000, wordCountMax : 1000 }) };
+            postText += JSON.stringify(syn_index)+"\n"
+                +JSON.stringify(syn)+"\n";
+        }
+        var args = {
+            data: postText,
+            headers: { "Content-Type": "application/json" }
+        };
+        client.post(nconf.get('listen-address')+":"+nconf.get('listen-port')+"/_bulk", args, function (data, response) {
+            console.log(JSON.stringify(data));
+            callback();
+        });
+    }
+    var funcArray = [];
+    for (var i = 0; i < documentCount; i++) {
+        funcArray.push(func);
+    }
+    async.series(funcArray,
+        function (err, results) {
+            console.log("Finished insert otec a syn");
+        }
+    );
+}
+
+function insertOtecSyn40000Po1() {
+    var func = function(callback) {
+        var otec_index = {"index":{"_index":"big-data-test","_type":"otec40000","_id":++id3}};
+        var otec = { "text" : randomizer.randomText({wordMinLen:5, wordMaxLen:15, wordCountMin: 1, wordCountMax : 1 }) };
+        var postText = JSON.stringify(otec_index)+"\n"
+            +JSON.stringify(otec)+"\n";
+        for (var i=0; i<40000; i++) {
+            var syn_index = {"index":{"_index":"big-data-test","_type":"syn40000","_id":++id4,"_parent":id3}};
+            var syn = { "login" : randomizer.randomText({wordMinLen:5, wordMaxLen:15, wordCountMin: 1, wordCountMax : 1 }) };
+            postText += JSON.stringify(syn_index)+"\n"
+                +JSON.stringify(syn)+"\n";
+        }
+        var args = {
+            data: postText,
+            headers: { "Content-Type": "application/json" }
+        };
+        client.post(nconf.get('listen-address')+":"+nconf.get('listen-port')+"/_bulk", args, function (data, response) {
+            console.log(JSON.stringify(data));
+            callback();
+        });
+    }
+    var funcArray = [];
+    for (var i = 0; i < documentCount; i++) {
+        funcArray.push(func);
+    }
+    async.series(funcArray,
+        function (err, results) {
+            console.log("Finished insert otec a syn");
+        }
+    );
+}
+
+function insertOtecPole() {
+    var func = function(callback) {
+        var otec_index = {"index":{"_index":"big-data-test","_type":"otecpole","_id":++id5}};
+        var otec = { "text" : randomizer.randomStringArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 40000, wordCountMax : 40000 }) };
+        var postText = JSON.stringify(otec_index)+"\n"
+            +JSON.stringify(otec)+"\n";
+        var args = {
+            data: postText,
+            headers: { "Content-Type": "application/json" }
+        };
+        client.post(nconf.get('listen-address')+":"+nconf.get('listen-port')+"/_bulk", args, function (data, response) {
+            console.log(JSON.stringify(data));
+            callback();
+        });
+    }
+    var funcArray = [];
+    for (var i = 0; i < documentCount; i++) {
+        funcArray.push(func);
+    }
+    async.series(funcArray,
+        function (err, results) {
+            console.log("Finished insert otec a syn");
+        }
+    );
+}
 
 function insertRandomBigData() {
-    insertBig(function (callback) {
-        var inserted = randomizer.randomText({wordMinLen:5, wordMaxLen:15, wordCountMin: 400000, wordCountMax : 500000 });
-        insertData({id : textID++, "text": inserted }, "/big-data-test/bigText", callback);
-    });
+    // insertBig(function (callback) {
+    //     var inserted = randomizer.randomText({wordMinLen:5, wordMaxLen:15, wordCountMin: 1, wordCountMax : 1 });
+    //     insertData({id : objectID++,"text": inserted }, "/big-data-test/otec", callback);
+    // });
     insertBig(function (callback) {
         var inserted = randomizer.randomStringArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 40000, wordCountMax : 50000 });
-        insertData({id : stringArrayID++, "stringArray": inserted }, "/big-data-test/bigStringArray", callback);
+        insertData({id : stringArrayID++, "stringArray": inserted }, "/big-data-test/syn", callback);
     });
     // insertBig(function (callback) {
     //     var inserted = randomizer.randomObject({wordMinLen:5, wordMaxLen:15, wordCountMin: 100000, wordCountMax : 500000 });
@@ -36,18 +134,18 @@ function insertRandomBigData() {
     // });
 
     //(10*15000)*100
-    insertBig(function (callback) {
-        //var inserted = randomizer.randomObjectArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 10000, wordCountMax : 20000, objectCountMin: 50, objectCountMax: 150   });
-        //var inserted = randomizer.randomObjectArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 10000, wordCountMax : 20000, objectCountMin: 5, objectCountMax: 15   });
-        var inserted = randomizer.randomObjectArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 1000, wordCountMax : 2000, objectCountMin: 500, objectCountMax: 500   });
-        insertData({id : objectArrayID++, "objectArray": inserted }, "/big-data-test/bigObjectArray", callback);
-    });
+    // insertBig(function (callback) {
+    //     //var inserted = randomizer.randomObjectArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 10000, wordCountMax : 20000, objectCountMin: 50, objectCountMax: 150   });
+    //     //var inserted = randomizer.randomObjectArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 10000, wordCountMax : 20000, objectCountMin: 5, objectCountMax: 15   });
+    //     var inserted = randomizer.randomObjectArray({wordMinLen:5, wordMaxLen:15, wordCountMin: 1000, wordCountMax : 2000, objectCountMin: 500, objectCountMax: 500   });
+    //     insertData({id : objectArrayID++, "objectArray": inserted }, "/big-data-test/bigObjectArray", callback);
+    // });
 
 }
 
 function insertBig(func) {
     var bigFunc = [];
-    for (var i = 0; i < 5000; i++) {
+    for (var i = 0; i < documentCount; i++) {
         bigFunc.push(func);
     }
     async.series(bigFunc,
